@@ -29,10 +29,13 @@ public class GameControllerMultiplayer : MonoBehaviour
 
 
     [Command]
-    private void SpawnSilverCoinDebug(Vector2 position)
+    private void SpawnSilverCoinAtCursorDebug()
     {
-        SpawnSpawnableObjectServerRpc(GetSpawnableObjectSOIndex(silverCoinSODEBUG), position);
-        print("Spawned at " + position);
+        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        cursorPosition.z = 0; // Ensure the z-coordinate is set to 0 for 2D games
+
+        SpawnSpawnableObjectServerRpc(GetSpawnableObjectSOIndex(silverCoinSODEBUG), new Vector2(cursorPosition.x, cursorPosition.y));
+        print("Spawned at " + cursorPosition);
     }
 
     [Rpc(SendTo.Server)]
