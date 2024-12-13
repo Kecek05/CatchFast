@@ -138,9 +138,9 @@ GameObject:
   - component: {fileID: 6196543168215046748}
   - component: {fileID: 13618267906065912}
   - component: {fileID: 6336948154219267927}
-  - component: {fileID: 5743432904279173871}
   - component: {fileID: 6124290798978515659}
   - component: {fileID: 8964917042284011309}
+  - component: {fileID: 7474694749732290829}
   m_Layer: 0
   m_Name: Silver_Coin
   m_TagString: Untagged
@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1186640347
+  GlobalObjectIdHash: 1035752963
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -252,20 +252,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &5743432904279173871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7569050839797637820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1f394a5f33f9f248bab0bb8a75bd82b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  spawnableObjectSO: {fileID: 11400000, guid: 68fdaebc1d1e6b74aa03102655a4a75e, type: 2}
 --- !u!114 &6124290798978515659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,3 +305,17 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &7474694749732290829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7569050839797637820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b494f7235ed051e41b46fa1faae424e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  spawnableObjectSO: {fileID: 11400000, guid: 68fdaebc1d1e6b74aa03102655a4a75e, type: 2}
