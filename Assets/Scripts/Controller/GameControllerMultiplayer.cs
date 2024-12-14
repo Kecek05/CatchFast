@@ -9,7 +9,7 @@ public class GameControllerMultiplayer : NetworkBehaviour
 
     [SerializeField] private SpawnableObjectListSO spawnableObjectListSO;
 
-    [SerializeField] private SpawnableObjectSO silverCoinSODEBUG;
+    public SpawnableObjectSO silverCoinSODEBUG;
 
     private void Awake()
     {
@@ -17,13 +17,15 @@ public class GameControllerMultiplayer : NetworkBehaviour
         {
             Instance = this;
         }
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()
     {
         if(Input.GetKeyUp(KeyCode.E))
         {
-            SpawnSilverCoinAtCursorDebug();
+            SpawnableObject.SpawnSilverCoinAtCursorDebug();
         }
     }
 
@@ -86,25 +88,5 @@ public class GameControllerMultiplayer : NetworkBehaviour
 
 
 
-    #region DEBUG
-
-    [Command]
-    private void SpawnSilverCoinAtCursorDebug()
-    {
-        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        cursorPosition.z = 0; // Ensure the z-coordinate is set to 0 for 2D games
-
-        SpawnSpawnableObject(silverCoinSODEBUG, new Vector2(cursorPosition.x, cursorPosition.y));
-        print("Spawned at " + cursorPosition);
-    }
-
-    [Command]
-    private void SpawnSilverCoinAtMiddleDebug()
-    {
-        SpawnSpawnableObject(silverCoinSODEBUG, new Vector2(0, 3));
-        print("Spawned at " + new Vector2(0, 3));
-    }
-
-
-    #endregion
+   
 }

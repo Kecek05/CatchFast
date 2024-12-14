@@ -6,6 +6,7 @@ public class TestingNetcodeUI : MonoBehaviour
 {
     [SerializeField] private Button startHostButton;
     [SerializeField] private Button startClientButton;
+    [SerializeField] private Button allConnectedButton;
 
     private void Awake()
     {
@@ -20,6 +21,12 @@ public class TestingNetcodeUI : MonoBehaviour
             Debug.Log("CLIENT");
             NetworkManager.Singleton.StartClient();
             Hide();
+        });
+
+        allConnectedButton.onClick.AddListener(() =>
+        {
+            Debug.Log("ALL CONNECTED");
+            Loader.LoadNetwork(Loader.Scene.Game);
         });
     }
 

@@ -24,6 +24,8 @@ public class GameController : NetworkBehaviour
         }
     }
 
+    #region Network
+
     public override void OnNetworkSpawn()
     {
         player1Score.OnValueChanged += Player1Score_OnValueChanged;
@@ -33,15 +35,22 @@ public class GameController : NetworkBehaviour
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
         }
     }
 
+    private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        SpawnCoins();
+    }
 
     private void NetworkManager_OnClientConnectedCallback(ulong clientId)
     {
         print("Player " + clientId + " has joined the game");
     }
 
+
+    #endregion
 
     #region On Value Changed
 
@@ -57,28 +66,13 @@ public class GameController : NetworkBehaviour
 
     #endregion
 
-
-    #region Spawn/ Destroy Methods
-
-    public static void SpawnSpawnableObject(SpawnableObjectSO spawnableObjectSO, Vector2 position)
-    {
-        GameControllerMultiplayer.Instance.SpawnSpawnableObject(spawnableObjectSO, position);
-    }
-
-    public static void DestroySpawanableObject(SpawnableObject spawnableObject)
-    {
-        GameControllerMultiplayer.Instance.DestroySpawnableObject(spawnableObject);
-    }
-
-    #endregion
-
     #region Score Point Methods
 
     public void HitSpawnableObject(SpawnableObject spawnableObject)
     {
         ScorePointServerRpc(spawnableObject.GetSpawnableObjectSO().pointsValue);
 
-        GameControllerMultiplayer.Instance.DestroySpawnableObject(spawnableObject);
+        SpawnableObject.DestroySpawanableObject(spawnableObject);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -94,6 +88,17 @@ public class GameController : NetworkBehaviour
             player2Score.Value += pointsToScore;
         }
     }
+
+    #endregion
+
+
+    #region Spawn Controller 
+
+    public void SpawnCoins()
+    {
+        print("Spawn Coins");
+    }
+
 
     #endregion
 
