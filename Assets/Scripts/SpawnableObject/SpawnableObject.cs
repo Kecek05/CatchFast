@@ -5,15 +5,6 @@ using UnityEngine;
 public class SpawnableObject : NetworkBehaviour
 {
     [SerializeField] protected SpawnableObjectSO spawnableObjectSO;
-
-    private void Start()
-    {
-        if (IsServer)
-        {
-            //transform.rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
-        }
-    }
-
     private void Update()
     {
         if (!IsServer) return;
@@ -21,9 +12,6 @@ public class SpawnableObject : NetworkBehaviour
         // Move the object up based on its rotation
         transform.position += transform.up * spawnableObjectSO.speed;
     }
-
-
-
 
     public NetworkObject GetNetworkObject()
     {
@@ -38,7 +26,6 @@ public class SpawnableObject : NetworkBehaviour
     public void SetSpawnableObjectTargetPosition(Vector2 targetPosition)
     {
         Vector2 direction = targetPosition - (Vector2)transform.position;
-        Instantiate(GameController.Instance.debugCircleRed, direction, Quaternion.identity);
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
 

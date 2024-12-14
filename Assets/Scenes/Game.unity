@@ -1469,6 +1469,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   debugCircleYellow: {fileID: 5598855616359507084, guid: a3563d0162631eb4ba54b231ec782afa, type: 3}
   debugCircleRed: {fileID: 5598855616359507084, guid: 9831e3dd7bf5c4843867bdd8900a3e28, type: 3}
+  delayToSpawnCoins: 1
 --- !u!114 &1683332391
 MonoBehaviour:
   m_ObjectHideFlags: 0
