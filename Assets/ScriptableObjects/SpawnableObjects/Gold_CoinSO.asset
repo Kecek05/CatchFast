@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c292947eda7df0e41a0f92b9b6dca17e, type: 3}
-  m_Name: SpawnableObjectListSO
+  m_Script: {fileID: 11500000, guid: 05e89042b63d42a42b950bc46ba34084, type: 3}
+  m_Name: Gold_CoinSO
   m_EditorClassIdentifier: 
-  spawnableObjectSOList:
-  - {fileID: 11400000, guid: 68fdaebc1d1e6b74aa03102655a4a75e, type: 2}
-  - {fileID: 11400000, guid: db6194c984a664d40963a47361b7f94a, type: 2}
+  prefab: {fileID: 3880472480740527215, guid: c9637c6902c190f47abab5b5bd9e05ac, type: 3}
+  pointsValue: 5
+  speed: 0.05
+  rarity: 30

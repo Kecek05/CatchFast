@@ -1,4 +1,5 @@
 using QFSW.QC;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ public class GameControllerMultiplayer : NetworkBehaviour
     {
         if(Input.GetKeyUp(KeyCode.E))
         {
-            SpawnableObject.SpawnSilverCoinAtCursorDebug();
+            //SpawnableObject.SpawnSilverCoinAtCursorDebug();
         }
     }
 
@@ -33,14 +34,14 @@ public class GameControllerMultiplayer : NetworkBehaviour
 
     //Spawn
 
-    public void SpawnSpawnableObject(SpawnableObjectSO spawnableObjectSO, Vector2 position)
+    public void SpawnSpawnableObject(SpawnableObjectSO spawnableObjectSO, Vector2 position, Vector2 targetPosition)
     {
-        SpawnSpawnableObjectServerRpc(GetSpawnableObjectSOIndex(spawnableObjectSO), position);
+        SpawnSpawnableObjectServerRpc(GetSpawnableObjectSOIndex(spawnableObjectSO), position, targetPosition);
     }
 
 
     [ServerRpc(RequireOwnership = false)]
-    private void SpawnSpawnableObjectServerRpc(int spawnableObjectSOIndex, Vector2 position)
+    private void SpawnSpawnableObjectServerRpc(int spawnableObjectSOIndex, Vector2 position, Vector2 targetPosition)
     {
         SpawnableObjectSO spawnableObjectSO = GetSpawnableObjectSOFromIndex(spawnableObjectSOIndex);
 
@@ -48,6 +49,11 @@ public class GameControllerMultiplayer : NetworkBehaviour
 
         NetworkObject spawnableObjectNetworkObject = spawnableObjectGameObject.GetComponent<NetworkObject>();
         spawnableObjectNetworkObject.Spawn(true);
+
+        SpawnableObject spawnableObject = spawnableObjectGameObject.GetComponent<SpawnableObject>();
+
+        spawnableObject.SetSpawnableObjectTargetPosition(targetPosition);
+
 
     }
 
@@ -82,11 +88,29 @@ public class GameControllerMultiplayer : NetworkBehaviour
         return spawnableObjectListSO.spawnableObjectSOList[spawnableObjectSOIndex];
     }
 
+    public SpawnableObjectSO GetRandomSpawnableObjectSO()
+    {
+        int totalWeight = spawnableObjectListSO.spawnableObjectSOList.Sum(so => (int)so.rarity);
+        int randomWeight = Random.Range(0, totalWeight);
+        int currentWeight = 0;
+
+        foreach (SpawnableObjectSO spawnableObjectSO in spawnableObjectListSO.spawnableObjectSOList)
+        {
+            currentWeight += (int)spawnableObjectSO.rarity;
+            if (randomWeight < currentWeight)
+            {
+                return spawnableObjectSO;
+            }
+        }
+
+        return null; // This should never happen
+    }
+
     #endregion
 
 
 
 
 
-   
+
 }

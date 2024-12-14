@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e89042b63d42a42b950bc46ba34084, type: 3}
   m_Name: Silver_CoinSO
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7569050839797637820, guid: e5aa8cf0f4ea1cf4dbf3e094a3c41a68, type: 3}
+  prefab: {fileID: 6321289510197906820, guid: acd70040bee5e2e43af83f9469e546a7, type: 3}
   pointsValue: 1
-  speed: 5
+  speed: 0.02
+  rarity: 60

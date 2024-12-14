@@ -13,14 +13,14 @@ public class TestingNetcodeUI : MonoBehaviour
         startHostButton.onClick.AddListener(() => {
             Debug.Log("HOST");
             NetworkManager.Singleton.StartHost();
-            Hide();
+            //Hide();
         });
 
         startClientButton.onClick.AddListener(() =>
         {
             Debug.Log("CLIENT");
             NetworkManager.Singleton.StartClient();
-            Hide();
+            //Hide();
         });
 
         allConnectedButton.onClick.AddListener(() =>

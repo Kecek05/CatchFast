@@ -7,4 +7,12 @@ public class SpawnableObjectSO : ScriptableObject
     public int pointsValue;
     public float speed;
 
+    public SpawnableObjectRarity rarity;
+
+    public enum SpawnableObjectRarity
+    {
+        Normal = 60,
+        Epic = 30,
+        Legendary = 10,
+    }
 }
