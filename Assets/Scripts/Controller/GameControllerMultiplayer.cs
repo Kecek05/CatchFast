@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using QFSW.QC;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
@@ -88,23 +90,11 @@ public class GameControllerMultiplayer : NetworkBehaviour
         return spawnableObjectListSO.spawnableObjectSOList[spawnableObjectSOIndex];
     }
 
-    public SpawnableObjectSO GetRandomSpawnableObjectSO()
+    public List<SpawnableObjectSO> GetSpawnableObjectSOList()
     {
-        int totalWeight = spawnableObjectListSO.spawnableObjectSOList.Sum(so => (int)so.rarity);
-        int randomWeight = Random.Range(0, totalWeight);
-        int currentWeight = 0;
-
-        foreach (SpawnableObjectSO spawnableObjectSO in spawnableObjectListSO.spawnableObjectSOList)
-        {
-            currentWeight += (int)spawnableObjectSO.rarity;
-            if (randomWeight < currentWeight)
-            {
-                return spawnableObjectSO;
-            }
-        }
-
-        return null; // This should never happen
+        return spawnableObjectListSO.spawnableObjectSOList;
     }
+
 
     #endregion
 

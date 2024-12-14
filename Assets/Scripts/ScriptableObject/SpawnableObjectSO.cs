@@ -11,7 +11,8 @@ public class SpawnableObjectSO : ScriptableObject
 
     public enum SpawnableObjectRarity
     {
-        Normal = 60,
+        //individual percentage
+        Common = 100,
         Epic = 30,
         Legendary = 10,
     }

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6321289510197906820, guid: acd70040bee5e2e43af83f9469e546a7, type: 3}
   pointsValue: 1
-  speed: 0.02
-  rarity: 60
+  speed: 0.025
+  rarity: 100

@@ -20,6 +20,11 @@ public class GameController : NetworkBehaviour
     private NetworkVariable<int> player2Score = new(0);
 
 
+
+    private List<SpawnableObjectSO> spawnableObjectSOCommonList = new List<SpawnableObjectSO>();
+    private List<SpawnableObjectSO> spawnableObjectSOEpicList = new List<SpawnableObjectSO>();
+    private List<SpawnableObjectSO> spawnableObjectSOLegendaryList = new List<SpawnableObjectSO>();
+
     public GameObject debugCircleYellow;
     public GameObject debugCircleRed;
 
@@ -43,6 +48,23 @@ public class GameController : NetworkBehaviour
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientConnectedCallback;
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+        }
+
+
+        foreach (SpawnableObjectSO spawnableObjectSO in GameControllerMultiplayer.Instance.GetSpawnableObjectSOList())
+        {
+            if (spawnableObjectSO.rarity == SpawnableObjectSO.SpawnableObjectRarity.Common)
+            {
+                spawnableObjectSOCommonList.Add(spawnableObjectSO);
+            }
+            else if (spawnableObjectSO.rarity == SpawnableObjectSO.SpawnableObjectRarity.Epic)
+            {
+                spawnableObjectSOEpicList.Add(spawnableObjectSO);
+            }
+            else if (spawnableObjectSO.rarity == SpawnableObjectSO.SpawnableObjectRarity.Legendary)
+            {
+                spawnableObjectSOLegendaryList.Add(spawnableObjectSO);
+            }
         }
     }
 
@@ -110,7 +132,7 @@ public class GameController : NetworkBehaviour
         {
             yield return new WaitForSeconds(2f);
             (Vector2 randomPosition, Vector2 oppositePosition) = GetRandomEdgePositionWithOpposite();
-            SpawnableObject.SpawnSpawnableObject(GameControllerMultiplayer.Instance.GetRandomSpawnableObjectSO(), randomPosition, oppositePosition);
+            SpawnableObject.SpawnSpawnableObject(GetRandomSpawnableObjectSO(), randomPosition, oppositePosition);
             print("Spawned coin at " + randomPosition);
         }
     }
@@ -181,6 +203,31 @@ public class GameController : NetworkBehaviour
 
 
         return (position, oppositePosition);
+    }
+
+
+
+    public SpawnableObjectSO GetRandomSpawnableObjectSO()
+    {
+        while(true)
+        {
+            int randomNumber = UnityEngine.Random.Range(1, 101); // 1 - 100
+
+            //rarest to common
+            if (randomNumber <= (int)SpawnableObjectSO.SpawnableObjectRarity.Legendary && spawnableObjectSOLegendaryList.Count > 0)
+            {
+                return spawnableObjectSOLegendaryList[UnityEngine.Random.Range(0, spawnableObjectSOLegendaryList.Count)];
+            }
+            else if (randomNumber <= (int)SpawnableObjectSO.SpawnableObjectRarity.Epic && spawnableObjectSOEpicList.Count > 0)
+            {
+                return spawnableObjectSOEpicList[UnityEngine.Random.Range(0, spawnableObjectSOEpicList.Count)];
+            }
+            else if (randomNumber <= (int)SpawnableObjectSO.SpawnableObjectRarity.Common && spawnableObjectSOCommonList.Count > 0)
+            {
+                return spawnableObjectSOCommonList[UnityEngine.Random.Range(0, spawnableObjectSOCommonList.Count)];
+            }
+
+        }
     }
 
 
