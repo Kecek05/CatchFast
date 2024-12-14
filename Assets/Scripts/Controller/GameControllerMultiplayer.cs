@@ -98,6 +98,13 @@ public class GameControllerMultiplayer : NetworkBehaviour
         print("Spawned at " + cursorPosition);
     }
 
+    [Command]
+    private void SpawnSilverCoinAtMiddleDebug()
+    {
+        SpawnSpawnableObject(silverCoinSODEBUG, new Vector2(0, 3));
+        print("Spawned at " + new Vector2(0, 3));
+    }
+
 
     #endregion
 }
