@@ -2,7 +2,7 @@ using QFSW.QC;
 using Unity.Netcode;
 using UnityEngine;
 
-public class GameControllerMultiplayer : MonoBehaviour
+public class GameControllerMultiplayer : NetworkBehaviour
 {
     
     public static GameControllerMultiplayer Instance { get; private set; }
@@ -19,7 +19,17 @@ public class GameControllerMultiplayer : MonoBehaviour
         }
     }
 
-    #region Spawn SpawnableObjects Methods
+    private void Update()
+    {
+        if(Input.GetKeyUp(KeyCode.E))
+        {
+            SpawnSilverCoinAtCursorDebug();
+        }
+    }
+
+    #region Spawn and Destroy SpawnableObjects Methods
+
+    //Spawn
 
     public void SpawnSpawnableObject(SpawnableObjectSO spawnableObjectSO, Vector2 position)
     {
@@ -27,19 +37,8 @@ public class GameControllerMultiplayer : MonoBehaviour
     }
 
 
-
-    [Command]
-    private void SpawnSilverCoinAtCursorDebug()
-    {
-        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        cursorPosition.z = 0; // Ensure the z-coordinate is set to 0 for 2D games
-
-        SpawnSpawnableObjectServerRpc(GetSpawnableObjectSOIndex(silverCoinSODEBUG), new Vector2(cursorPosition.x, cursorPosition.y));
-        print("Spawned at " + cursorPosition);
-    }
-
-    [Rpc(SendTo.Server)]
-    public void SpawnSpawnableObjectServerRpc(int spawnableObjectSOIndex, Vector2 position)
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnSpawnableObjectServerRpc(int spawnableObjectSOIndex, Vector2 position)
     {
         SpawnableObjectSO spawnableObjectSO = GetSpawnableObjectSOFromIndex(spawnableObjectSOIndex);
 
@@ -50,6 +49,23 @@ public class GameControllerMultiplayer : MonoBehaviour
 
     }
 
+    //Destroy
+
+    public void DestroySpawnableObject(SpawnableObject spawnableObject)
+    {
+        DestroySpawnableObjectServerRpc(spawnableObject.GetNetworkObject());
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DestroySpawnableObjectServerRpc(NetworkObjectReference spawnableObjectNetworkObjectReference)
+    {
+        spawnableObjectNetworkObjectReference.TryGet(out NetworkObject spawnableObjectNetworkObject);
+
+        if (spawnableObjectNetworkObject == null) return;
+
+        SpawnableObject spawnableObject = spawnableObjectNetworkObject.GetComponent<SpawnableObject>();
+        spawnableObjectNetworkObject.Despawn(true);
+    }
 
     #endregion
 
@@ -63,6 +79,25 @@ public class GameControllerMultiplayer : MonoBehaviour
     {
         return spawnableObjectListSO.spawnableObjectSOList[spawnableObjectSOIndex];
     }
+
+    #endregion
+
+
+
+
+
+    #region DEBUG
+
+    [Command]
+    private void SpawnSilverCoinAtCursorDebug()
+    {
+        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        cursorPosition.z = 0; // Ensure the z-coordinate is set to 0 for 2D games
+
+        SpawnSpawnableObject(silverCoinSODEBUG, new Vector2(cursorPosition.x, cursorPosition.y));
+        print("Spawned at " + cursorPosition);
+    }
+
 
     #endregion
 }

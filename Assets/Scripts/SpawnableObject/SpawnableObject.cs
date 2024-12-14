@@ -8,19 +8,21 @@ public class SpawnableObject : NetworkBehaviour
 
 
 
-    public static void SpawnSpawnableObject(SpawnableObjectSO spawnableObjectSO, Vector2 position)
-    {
-        GameControllerMultiplayer.Instance.SpawnSpawnableObject(spawnableObjectSO, position);
-    }
+
 
     public NetworkObject GetNetworkObject()
     {
         return NetworkObject;
     }
 
+    public SpawnableObjectSO GetSpawnableObjectSO()
+    {
+        return spawnableObjectSO;
+    }
+
     protected void OnMouseDown()
     {
-        Destroy(gameObject);
+        GameController.Instance.HitSpawnableObject(this);
     }
 }
 

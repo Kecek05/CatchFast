@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Silver_CoinSO
   m_EditorClassIdentifier: 
   prefab: {fileID: 7569050839797637820, guid: e5aa8cf0f4ea1cf4dbf3e094a3c41a68, type: 3}
-  value: 1
+  pointsValue: 1
   speed: 5

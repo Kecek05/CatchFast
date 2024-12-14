@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpawnableObjectSO : ScriptableObject
 {
     public GameObject prefab;
-    public int value;
+    public int pointsValue;
     public float speed;
 
 }
