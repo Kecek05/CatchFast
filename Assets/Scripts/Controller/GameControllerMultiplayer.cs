@@ -12,8 +12,6 @@ public class GameControllerMultiplayer : NetworkBehaviour
 
     [SerializeField] private SpawnableObjectListSO spawnableObjectListSO;
 
-    public SpawnableObjectSO silverCoinSODEBUG;
-
     private void Awake()
     {
         if (Instance == null)
@@ -22,14 +20,6 @@ public class GameControllerMultiplayer : NetworkBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
-    }
-
-    private void Update()
-    {
-        if(Input.GetKeyUp(KeyCode.E))
-        {
-            //SpawnableObject.SpawnSilverCoinAtCursorDebug();
-        }
     }
 
     #region Spawn and Destroy SpawnableObjects Methods

@@ -13,6 +13,8 @@ public class GameController : NetworkBehaviour
     private const float SPAWNABLE_OBJECTS_SPAWN_OFFSET = 40f;
     private const float SPAWNABLE_SCREEN_EDGE_OFFSET = 200f;
 
+    private const int POINTS_TO_WIN = 10;
+
     public event Action<int> OnPlayer1ScoreChanged;
     public event Action<int> OnPlayer2ScoreChanged;
     public event Action<int> OnPlayerWin;
@@ -22,7 +24,7 @@ public class GameController : NetworkBehaviour
     private NetworkVariable<int> player2Score = new(0);
 
     //Game States
-    private enum GameState
+    public enum GameState
     {
         WaitingToStart,
         CountdownToStart,
@@ -40,6 +42,9 @@ public class GameController : NetworkBehaviour
 
     [SerializeField] private float delayToSpawnCoins = 2f;
 
+
+    private IEnumerator spawnCoinsCoroutine;
+
     private void Awake()
     {
         if (Instance == null)
@@ -50,11 +55,13 @@ public class GameController : NetworkBehaviour
 
     #region GameState Control
 
-    private void ChangeGameState(GameState newState)
+    public void ChangeGameState(GameState newState)
     {
         if(newState != gameState.Value)
         {
-            switch (newState)
+            gameState.Value = newState;
+
+            switch (gameState.Value)
             {
                 case GameState.WaitingToStart:
                     //Waiting for all players to connect
@@ -64,10 +71,12 @@ public class GameController : NetworkBehaviour
                     break;
                 case GameState.GamePlaying:
                     //Game On
-                    StartCoroutine(SpawnCoinsCoroutine());
+                    spawnCoinsCoroutine = SpawnCoinsCoroutine();
+                    StartCoroutine(spawnCoinsCoroutine);
                     break;
                 case GameState.GameOver:
                     //Game Over, show win screen
+                    GameOverHandler();
                     break;
             }
         }
@@ -111,7 +120,7 @@ public class GameController : NetworkBehaviour
 
     private void State_OnValueChanged(GameState previousValue, GameState newValue)
     {
-        
+        OnGameStateChanged?.Invoke();
     }
 
     private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
@@ -167,17 +176,19 @@ public class GameController : NetworkBehaviour
         CheckScoreToWinServerRpc();
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     private void CheckScoreToWinServerRpc()
     {
-        if (player1Score.Value >= 10)
+        if (player1Score.Value >= POINTS_TO_WIN)
         {
             print("Player 1 Wins");
+            ChangeGameState(GameState.GameOver);
             CastPlayerWinClientRpc(1);
         }
-        else if (player2Score.Value >= 10)
+        else if (player2Score.Value >= POINTS_TO_WIN)
         {
             print("Player 2 Wins");
+            ChangeGameState(GameState.GameOver);
             CastPlayerWinClientRpc(2);
         }
     }
@@ -193,6 +204,23 @@ public class GameController : NetworkBehaviour
 
     #endregion
 
+    #region GameOver Handler
+
+    private void GameOverHandler()
+    {
+        StopCoroutine(spawnCoinsCoroutine); //stop spawning
+
+        //Destroy all spawnables
+        SpawnableObject[] remainingSpawnableObjects = FindObjectsByType<SpawnableObject>(FindObjectsSortMode.None);
+
+        foreach (SpawnableObject spawnableObject in remainingSpawnableObjects)
+        {
+            SpawnableObject.DestroySpawanableObject(spawnableObject);
+        }
+
+    }
+
+    #endregion
 
     #region Spawn Controller 
 
@@ -323,6 +351,7 @@ public class GameController : NetworkBehaviour
     {
         return gameState.Value == GameState.CountdownToStart;
     }
+
 
     #endregion
 

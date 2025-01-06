@@ -44,29 +44,6 @@ public class SpawnableObject : NetworkBehaviour
         GameControllerMultiplayer.Instance.DestroySpawnableObject(spawnableObject);
     }
 
-
-    #region DEBUG
-
-    //[Command]
-    //public static void SpawnSilverCoinAtCursorDebug()
-    //{
-    //    Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //    cursorPosition.z = 0; // Ensure the z-coordinate is set to 0 for 2D games
-
-    //    SpawnSpawnableObject(GameControllerMultiplayer.Instance.silverCoinSODEBUG, new Vector2(cursorPosition.x, cursorPosition.y));
-    //    print("Spawned at " + cursorPosition);
-    //}
-
-    //[Command]
-    //public static void SpawnSilverCoinAtMiddleDebug()
-    //{
-    //    SpawnSpawnableObject(GameControllerMultiplayer.Instance.silverCoinSODEBUG, new Vector2(0, 3));
-    //    print("Spawned at " + new Vector2(0, 3));
-    //}
-
-
-    #endregion
-
     #endregion
 
 

@@ -1,10 +1,12 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class GameStartCountdownUI : MonoBehaviour
 {
     [SerializeField] private GameObject gameStartCountdownPanel;
     [SerializeField] private Animator gameStartCountdownAnimator;
-
+    [SerializeField] private TextMeshProUGUI gameStartCountdownTxt;
 
     private void Start()
     {
@@ -18,14 +20,27 @@ public class GameStartCountdownUI : MonoBehaviour
         if(GameController.Instance.IsInCountdownToStartState())
         {
             //Start Countdown
-            CountdownToStart();
+            StartCoroutine(CountdownToStartCoroutine());
         }
     }
 
-
-    private void CountdownToStart()
+    private IEnumerator CountdownToStartCoroutine()
     {
         Show();
+        gameStartCountdownTxt.text = "3";
+        gameStartCountdownAnimator.SetTrigger("Start");
+        yield return new WaitForSecondsRealtime(1f);
+        gameStartCountdownTxt.text = "2";
+        gameStartCountdownAnimator.SetTrigger("Start");
+        yield return new WaitForSecondsRealtime(1f);
+        gameStartCountdownTxt.text = "1";
+        gameStartCountdownAnimator.SetTrigger("Start");
+        yield return new WaitForSecondsRealtime(1f);
+        print("Start Game");
+        
+
+        Hide();
+        GameController.Instance.ChangeGameState(GameController.GameState.GamePlaying);
 
     }
 
