@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.CullingGroup;
 
 public class GameController : NetworkBehaviour
 {
@@ -14,12 +15,21 @@ public class GameController : NetworkBehaviour
 
     public event Action<int> OnPlayer1ScoreChanged;
     public event Action<int> OnPlayer2ScoreChanged;
-
+    public event Action<int> OnPlayerWin;
+    public event Action OnGameStateChanged;
 
     private NetworkVariable<int> player1Score = new(0);
     private NetworkVariable<int> player2Score = new(0);
 
-
+    //Game States
+    private enum GameState
+    {
+        WaitingToStart,
+        CountdownToStart,
+        GamePlaying,
+        GameOver,
+    }
+    private NetworkVariable<GameState> gameState = new(GameState.WaitingToStart);
 
     private List<SpawnableObjectSO> spawnableObjectSOCommonList = new List<SpawnableObjectSO>();
     private List<SpawnableObjectSO> spawnableObjectSOEpicList = new List<SpawnableObjectSO>();
@@ -38,10 +48,39 @@ public class GameController : NetworkBehaviour
         }
     }
 
+    #region GameState Control
+
+    private void ChangeGameState(GameState newState)
+    {
+        if(newState != gameState.Value)
+        {
+            switch (newState)
+            {
+                case GameState.WaitingToStart:
+                    //Waiting for all players to connect
+                    break;
+                case GameState.CountdownToStart:
+                    //Countdown to start the game
+                    break;
+                case GameState.GamePlaying:
+                    //Game On
+                    StartCoroutine(SpawnCoinsCoroutine());
+                    break;
+                case GameState.GameOver:
+                    //Game Over, show win screen
+                    break;
+            }
+        }
+    }
+
+    #endregion
+
+
     #region Network
 
     public override void OnNetworkSpawn()
     {
+        gameState.OnValueChanged += State_OnValueChanged;
         player1Score.OnValueChanged += Player1Score_OnValueChanged;
         player2Score.OnValueChanged += Player2Score_OnValueChanged;
 
@@ -70,11 +109,16 @@ public class GameController : NetworkBehaviour
         }
     }
 
+    private void State_OnValueChanged(GameState previousValue, GameState newValue)
+    {
+        
+    }
+
     private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
     {
         print("All clients have loaded the scene");
 
-        StartCoroutine(SpawnCoinsCoroutine());
+        ChangeGameState(GameState.CountdownToStart);
     }
 
     private void NetworkManager_OnClientConnectedCallback(ulong clientId)
@@ -120,7 +164,32 @@ public class GameController : NetworkBehaviour
             //Client score point
             player2Score.Value += pointsToScore;
         }
+        CheckScoreToWinServerRpc();
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void CheckScoreToWinServerRpc()
+    {
+        if (player1Score.Value >= 10)
+        {
+            print("Player 1 Wins");
+            CastPlayerWinClientRpc(1);
+        }
+        else if (player2Score.Value >= 10)
+        {
+            print("Player 2 Wins");
+            CastPlayerWinClientRpc(2);
+        }
+    }
+
+
+
+    [ClientRpc]
+    private void CastPlayerWinClientRpc(int playerNumber)
+    {
+        OnPlayerWin?.Invoke(playerNumber);
+    }
+
 
     #endregion
 
@@ -133,6 +202,8 @@ public class GameController : NetworkBehaviour
         while(true)
         {
             yield return new WaitForSeconds(delayToSpawnCoins);
+            if (!IsInGamePlayingState()) break;
+
             (Vector2 randomPosition, Vector2 oppositePosition) = GetRandomEdgePositionWithOpposite();
             SpawnableObject.SpawnSpawnableObject(GetRandomSpawnableObjectSO(), randomPosition, oppositePosition);
         }
@@ -238,6 +309,20 @@ public class GameController : NetworkBehaviour
         }
     }
 
+
+    #endregion
+
+    #region GameState Checks
+
+    public bool IsInGamePlayingState()
+    {
+        return gameState.Value == GameState.GamePlaying;
+    }
+
+    public bool IsInCountdownToStartState()
+    {
+        return gameState.Value == GameState.CountdownToStart;
+    }
 
     #endregion
 

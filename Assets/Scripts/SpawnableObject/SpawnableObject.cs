@@ -10,7 +10,7 @@ public class SpawnableObject : NetworkBehaviour
         if (!IsServer) return;
 
         // Move the object up based on its rotation
-        transform.position += transform.up * spawnableObjectSO.speed;
+        transform.position += transform.up * spawnableObjectSO.speed * Time.deltaTime;
     }
 
     public NetworkObject GetNetworkObject()

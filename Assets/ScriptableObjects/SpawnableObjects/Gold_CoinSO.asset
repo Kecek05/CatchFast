@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Gold_CoinSO
   m_EditorClassIdentifier: 
   prefab: {fileID: 3880472480740527215, guid: c9637c6902c190f47abab5b5bd9e05ac, type: 3}
-  pointsValue: 5
-  speed: 0.05
+  pointsValue: 2
+  speed: 4
   rarity: 30
