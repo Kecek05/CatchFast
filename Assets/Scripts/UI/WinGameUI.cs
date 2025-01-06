@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WinGameUI : MonoBehaviour
+public class WinGameUI : NetworkBehaviour
 {
     [SerializeField] private TextMeshProUGUI playerWinTxt;
     [SerializeField] private Button mainMenuBtn;
@@ -27,9 +27,27 @@ public class WinGameUI : MonoBehaviour
 
     private void GameController_OnPlayerWin(int playerWin)
     {
-        Show();
 
-        playerWinTxt.text = "Player " + playerWin + " Wins!";
+        if(playerWin == 1 && IsServer)
+        {
+            // server win and in server
+            playerWinTxt.text = "YOU WIN!";
+        } else if (playerWin == 1 && !IsServer)
+        {
+            // server win  and not in server
+            playerWinTxt.text = "YOU LOSE!";
+        } else if (playerWin == 2 && IsServer)
+        {
+            //client win and in server
+            playerWinTxt.text = "YOU LOSE!";
+        } else if (playerWin == 2 && !IsServer)
+        {
+            //client win and not in server
+            playerWinTxt.text = "YOU WIN!";
+        }
+
+        
+        Show();
     }
 
 
